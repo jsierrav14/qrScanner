@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {FC, useState} from 'react';
 import {
   View,
   TouchableOpacity,
@@ -10,7 +10,7 @@ import {
 import {RNCamera} from 'react-native-camera';
 import {useCamera} from 'react-native-camera-hooks';
 
-export default function Camera() {
+const Camera: FC =({navigation})=> {
   const [{cameraRef}, {takePicture}] = useCamera(null);
   const [uri, setUri] = useState('');
   let barcodes: string | any[] = [];
@@ -29,6 +29,8 @@ export default function Camera() {
       if (!barcodes.includes(scanResult.data)) {
         barcodes = [...barcodes, scanResult.data];
         setUri(scanResult.data);
+        navigation.navigate('Userlist', {name: 'Jane'})
+
         console.warn('onBarCodeRead call', scanResult.data);
       }
     }
@@ -45,7 +47,7 @@ export default function Camera() {
       </RNCamera>
 
       <View style={[styles.overlay, styles.topOverlay]}>
-        <Text style={styles.scanScreenMessage}>Please scan the barcode.</Text>
+        <Text style={styles.scanScreenMessage}>{uri}</Text>
       </View>
       <View style={[styles.overlay, styles.bottomOverlay]}>
         <Button
@@ -100,5 +102,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop:400, 
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    flexDirection: 'row'
   },
 });
+
+export default Camera;
